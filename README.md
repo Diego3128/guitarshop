@@ -33,7 +33,7 @@ Make sure you have the following installed:
    ```
 2. Navigate to the project directory:  
    ```bash
-   cd guitarla-react
+   cd guitarshop
    ```
 3. Install dependencies:  
    ```bash
@@ -41,11 +41,11 @@ Make sure you have the following installed:
    ```
 4. Start the development server:  
    ```bash
-   npm start
+   npm run dev
    ```
 5. Open your browser and navigate to:  
    ```
-   http://localhost:3000
+   http://localhost:5173/
    ```
 
 ---

@@ -1,25 +1,46 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Header from "./components/Header"
 import Guitar from "./components/Guitar"
 import { db } from "./data/db";
 
 function App() {
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(db); // eslint-disable-line no-unused-vars
 
-  useEffect(() => {
-    setData(db);
-  }, [])
+  const [cart, setCart] = useState([]);
+
+  function addToCart(newItem = {}) {
+    // returns the index of the item or -1 if it doesnt exist in the array
+    const exits = cart.findIndex(item => item.id === newItem.id)
+
+    if (exits >= 0) {
+      // create a shallow copy of the array and update the quantity
+      const updatedCart = [...cart];
+      updatedCart[exits].quantity++;
+      //set the state
+      setCart(updatedCart);
+    } else {
+      // set quantity when first added
+      newItem.quantity = 1;
+      setCart([...cart, newItem])
+    }
+  }
 
   return (
     <>
-      <Header />
+      <Header
+        cart={cart}
+      />
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
 
         <div className="row mt-5">
           {data.map((guitar) => (
-            <Guitar key={guitar.id} guitar={guitar} />
+            <Guitar
+              key={guitar.id}
+              guitar={guitar}
+              addToCart={addToCart}
+            />
           )
           )
           }
