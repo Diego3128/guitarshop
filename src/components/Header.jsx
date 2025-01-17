@@ -1,7 +1,11 @@
-export default function Header({ cart = {} }) {
+import { useMemo } from "react";
 
-    //derived state
-    const isCartEmpty = () => cart.length === 0;
+export default function Header({ cart = {}, deleteFromCart, increaseQuantity, decreaseQuantity, clearCart }) {
+
+    //derived states
+    const isCartEmpty = useMemo(() => cart.length === 0, [cart]);
+    const itemNum = useMemo(() => cart.length, [cart]);
+    const cartTotal = useMemo(() => cart.reduce((accumulator, item) => accumulator + (item.price * item.quantity), 0), [cart]);
 
     return (
         <header className="py-5 header">
@@ -15,9 +19,10 @@ export default function Header({ cart = {} }) {
                     <nav className="col-md-6 a mt-5 d-flex align-items-start justify-content-end">
                         <div className="carrito">
                             <img className="img-fluid" src="/img/carrito.png" alt="imagen carrito" />
+                            {!isCartEmpty && <p className="item-number">{itemNum}</p>}
 
                             <div id="carrito" className="bg-white p-3">
-                                {isCartEmpty() ? (
+                                {isCartEmpty ? (
                                     <p className="text-center">El carrito esta vacio</p>
                                 ) : (
                                     <>
@@ -47,16 +52,25 @@ export default function Header({ cart = {} }) {
                                                                 ${item.price}
                                                             </td>
                                                             <td className="flex align-items-start gap-4">
-                                                                <button type="button" className="btn btn-dark">
+                                                                <button
+                                                                    onClick={() => decreaseQuantity(item.id)}
+                                                                    type="button"
+                                                                    className="btn btn-dark">
                                                                     -
                                                                 </button>
                                                                 {item.quantity}
-                                                                <button type="button" className="btn btn-dark">
+                                                                <button
+                                                                    onClick={() => { increaseQuantity(item.id) }}
+                                                                    type="button"
+                                                                    className="btn btn-dark">
                                                                     +
                                                                 </button>
                                                             </td>
                                                             <td>
-                                                                <button className="btn btn-danger" type="button">
+                                                                <button
+                                                                    className="btn btn-danger"
+                                                                    type="button"
+                                                                    onClick={() => deleteFromCart(item.id)}>
                                                                     X
                                                                 </button>
                                                             </td>
@@ -67,8 +81,10 @@ export default function Header({ cart = {} }) {
                                             </tbody>
                                         </table>
 
-                                        <p className="text-end">Total pagar: <span className="fw-bold">$899</span></p>
-                                        <button className="btn btn-dark w-100 mt-3 p-2">Vaciar Carrito</button>
+                                        <p className="text-end">Total pagar: <span className="fw-bold">{cartTotal}</span></p>
+                                        <button
+                                            onClick={clearCart}
+                                            className="btn btn-dark w-100 mt-3 p-2">Vaciar Carrito</button>
                                     </>
                                 )}
 
